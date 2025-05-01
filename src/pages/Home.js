@@ -81,7 +81,7 @@ function Home() {
               </Link>
               {/* Download Resume Button */}
               <a
-                href="/resume.pdf" // Make sure the file is in the public folder
+                href="/MyResume.pdf" // Make sure the file is in the public folder
                 download
                 className="px-8 py-4 border-2 border-white text-white font-semibold rounded-xl shadow-lg hover:bg-white hover:text-black transition-all transform hover:scale-105 flex items-center justify-center space-x-2"
               >
