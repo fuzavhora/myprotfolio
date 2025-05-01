@@ -76,7 +76,7 @@ function Admin() {
     try {
       setLoading(true);
   
-      const response = await axiosInstance.post("api/auth/login", loginData);
+      const response = await axiosInstance.post("auth/login", loginData);
   
       // Axios already parses JSON, so use response.data directly
       const data = response.data;

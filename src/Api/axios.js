@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-    baseURL: process.env.BASE_URL,
+    baseURL: "https://portfolio-server-1-a04i.onrender.com/api/",
     withCredentials: true,
   });
   
