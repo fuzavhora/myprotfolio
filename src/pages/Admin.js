@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import axiosInstance from "../Api/axios";
 
 function Admin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -46,26 +47,50 @@ function Admin() {
     }
   };
 
+  // const handleLogin = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     setLoading(true);
+  //     // const response = await fetch("/api/auth/login", {
+  //     //   method: "POST",
+  //     //   headers: { "Content-Type": "application/json" },
+  //     //   body: JSON.stringify(loginData),
+  //     // });
+  //     const response = await axiosInstance.post("/auth/login", loginData);
+  //     localStorage.setItem("token", response.data.token); // Save token for future requests
+  //     const data = await response.json();
+  //     if (!response.ok) throw new Error(data.message);
+  //     localStorage.setItem("adminToken", data.token);
+  //     setIsAuthenticated(true);
+  //     fetchProjects(data.token);
+  //   } catch (err) {
+  //     setError(err.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(loginData),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message);
+  
+      const response = await axiosInstance.post("/auth/login", loginData);
+  
+      // Axios already parses JSON, so use response.data directly
+      const data = response.data;
+  
       localStorage.setItem("adminToken", data.token);
       setIsAuthenticated(true);
       fetchProjects(data.token);
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || err.message);
     } finally {
       setLoading(false);
     }
   };
+  
 
   const handleLogout = () => {
     localStorage.removeItem("adminToken");
