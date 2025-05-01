@@ -63,7 +63,7 @@ function Footer() {
           <p className="text-sm md:text-base">
             © {currentYear}{' '}
             <span className="bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent font-semibold">
-              Your Name
+              Fuzail Vhora
             </span>. All rights reserved.
           </p>
         </div>
