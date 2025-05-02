@@ -18,4 +18,4 @@ const axiosInstance = axios.create({
 //   (error) => Promise.reject(error)
 // );
 
-// export default axiosInstance;
+export default axiosInstance;
