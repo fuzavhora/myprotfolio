@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import axiosInstance from "../Api/axios";
+// import axiosInstance from "../Api/axios";
+import axios from "axios";
 
 function Admin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -76,7 +77,8 @@ function Admin() {
     try {
       setLoading(true);
   
-      const response = await axiosInstance.post("auth/login", loginData);
+      // const response = await axiosInstance.post("auth/login", loginData);
+      const response = await axios.post("https://portfolio-server-1-a04i.onrender.com/api/auth/login", loginData);
   
       // Axios already parses JSON, so use response.data directly
       const data = response.data;
