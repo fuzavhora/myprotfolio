@@ -1,4 +1,5 @@
 // Remove the static Authorization header from axios.create()
+import axios from "axios";
 
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_API_URL || "https://portfolio-server-sr3n.onrender.com/project",
