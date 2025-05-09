@@ -28,7 +28,7 @@ function Admin() {
     if (token) {
       setIsAuthenticated(true);
       fetchProjects(token);
-      setError("")
+      setError("");
     }
   }, []);
 
@@ -44,11 +44,8 @@ function Admin() {
       setError(err.message);
     } finally {
       setLoading(false);
-      
     }
   };
-
-
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -87,21 +84,23 @@ function Admin() {
   const handleLogout = () => {
     localStorage.removeItem("adminToken");
     setIsAuthenticated(false);
-    setProjects([]);  
+    setProjects([]);
   };
 
   const handleProjectSubmit = async (e) => {
     e.preventDefault();
     console.log("Project form data:", projectForm);
-    
-    
+
     const token = localStorage.getItem("adminToken");
     try {
       setLoading(true);
 
-      const response = await axiosInstance.post("project/create-project", projectForm);
+      const response = await axiosInstance.post(
+        "project/create-project",
+        projectForm
+      );
       console.log("Response:", response);
-      
+
       if (!response.ok) throw new Error("Failed to save project");
       fetchProjects(token);
       setProjectForm({
@@ -122,17 +121,16 @@ function Admin() {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (title) => {
     if (!window.confirm("Are you sure you want to delete this project?"))
       return;
     const token = localStorage.getItem("adminToken");
     try {
       setLoading(true);
-      const response = await fetch(`/api/projects/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!response.ok) throw new Error("Failed to delete project");
+      const response = await axiosInstance.delete(
+        `/project/delete-project/${title}`
+      );
+      
       fetchProjects(token);
     } catch (err) {
       setError(err.message);
@@ -170,7 +168,7 @@ function Admin() {
               onSubmit={handleLogin}
               className="space-y-6 text-white/90 max-w-md w-full p-6 bg-gray-900 rounded-xl shadow-lg"
             >
-              {error.length !== 0  && (
+              {error.length !== 0 && (
                 <div className="bg-red-100 text-red-700 p-3 rounded-md border border-red-300 text-sm">
                   {error}
                 </div>
@@ -431,7 +429,7 @@ function Admin() {
                       <FaEdit />
                     </button>
                     <button
-                      onClick={() => handleDelete(project._id)}
+                      onClick={() => handleDelete(project.title)}
                       className="text-red-500 hover:text-red-600 text-lg"
                     >
                       <FaTrash />
