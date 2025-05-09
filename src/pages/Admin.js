@@ -40,35 +40,16 @@ function Admin() {
       if (!response.ok) throw new Error("Failed to fetch projects");
       const data = await response.json();
       setProjects(data);
+      setError("");
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
+      
     }
   };
 
-  // const handleLogin = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     setLoading(true);
-  //     // const response = await fetch("/api/auth/login", {
-  //     //   method: "POST",
-  //     //   headers: { "Content-Type": "application/json" },
-  //     //   body: JSON.stringify(loginData),
-  //     // });
-  //     const response = await axiosInstance.post("/auth/login", loginData);
-  //     localStorage.setItem("token", response.data.token); // Save token for future requests
-  //     const data = await response.json();
-  //     if (!response.ok) throw new Error(data.message);
-  //     localStorage.setItem("adminToken", data.token);
-  //     setIsAuthenticated(true);
-  //     fetchProjects(data.token);
-  //   } catch (err) {
-  //     setError(err.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -95,6 +76,8 @@ function Admin() {
         localStorage.removeItem("tokenExpiry");
         setIsAuthenticated(false);
       }, 60 * 60 * 1000); // 1 hour timeout
+      setLoading(false);
+      setError("");
     } catch (err) {
       setError(err.response?.data?.message || err.message);
     } finally {
@@ -105,7 +88,7 @@ function Admin() {
   const handleLogout = () => {
     localStorage.removeItem("adminToken");
     setIsAuthenticated(false);
-    setProjects([]);
+    setProjects([]);  
   };
 
   const handleProjectSubmit = async (e) => {
@@ -132,6 +115,7 @@ function Admin() {
         featured: false,
       });
       setEditingId(null);
+      setError("");
     } catch (err) {
       setError(err.message);
     } finally {
