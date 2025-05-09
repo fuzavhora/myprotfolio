@@ -28,6 +28,7 @@ function Admin() {
     if (token) {
       setIsAuthenticated(true);
       fetchProjects(token);
+      setError("")
     }
   }, []);
 
@@ -171,7 +172,7 @@ function Admin() {
               onSubmit={handleLogin}
               className="space-y-6 text-white/90 max-w-md w-full p-6 bg-gray-900 rounded-xl shadow-lg"
             >
-              {error && (
+              {error.length !== 0  && (
                 <div className="bg-red-100 text-red-700 p-3 rounded-md border border-red-300 text-sm">
                   {error}
                 </div>
