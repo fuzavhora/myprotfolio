@@ -36,8 +36,9 @@ function Admin() {
     try {
       setLoading(true);
       const response = await axiosInstance.get("/project");
-      const data = await response.json();
-      setProjects(data);
+      const data = response.data;
+      if (!data.success) throw new Error("Failed to fetch projects");
+      setProjects(data.projects);
       setError("");
     } catch (err) {
       setError(err.message);
