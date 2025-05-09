@@ -35,9 +35,7 @@ function Admin() {
   const fetchProjects = async (token) => {
     try {
       setLoading(true);
-      const response = await axiosInstance.post("/api/projects", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axiosInstance.get("/projects");
       if (!response.ok) throw new Error("Failed to fetch projects");
       const data = await response.json();
       setProjects(data);
