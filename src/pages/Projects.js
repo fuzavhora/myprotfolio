@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ProjectCard from '../components/ProjectCard';
 import { motion } from 'framer-motion';
+import axiosInstance from "../Api/axios"
 
 function Projects() {
   const [projects, setProjects] = useState([]);
@@ -20,15 +21,19 @@ function Projects() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await fetch('/api/projects');
-        if (!response.ok) {
-          throw new Error('Failed to fetch projects');
-        }
-        const data = await response.json();
+        const response = await axiosInstance.get('/project');
+       console.log("Response from server:", response);
+        
+       let data = response.data.projects;
+        
+        console.log("Fetched projects:", data);
+        
         setProjects(data);
         setFilteredProjects(data);
       } catch (err) {
         setError(err.message);
+        console.log("Error fetching projects:", err);
+        
       } finally {
         setLoading(false);
       }

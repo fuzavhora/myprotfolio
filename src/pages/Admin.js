@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaEdit, FaTrash } from "react-icons/fa";
 // import axiosInstance from "../Api/axios";
-import axios from "axios";
+import axiosInstance from "../Api/axios";
 
 function Admin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -15,12 +15,11 @@ function Admin() {
   });
   const [projectForm, setProjectForm] = useState({
     title: "",
-    description: "",
     technologies: "",
     imageUrl: "",
+    description: "",
+    gitHubUrl: "",
     liveUrl: "",
-    githubUrl: "",
-    featured: false,
   });
   const [editingId, setEditingId] = useState(null);
 
@@ -35,7 +34,7 @@ function Admin() {
   const fetchProjects = async (token) => {
     try {
       setLoading(true);
-      const response = await fetch("/api/projects", {
+      const response = await axiosInstance.post("/api/projects", {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) throw new Error("Failed to fetch projects");
@@ -71,28 +70,37 @@ function Admin() {
   //   }
   // };
 
-
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
-  
-      // const response = await axiosInstance.post("auth/login", loginData);
-      const response = await axios.post("https://portfolio-server-1-a04i.onrender.com/api/auth/login", loginData);
-  
-      // Axios already parses JSON, so use response.data directly
+      console.log("Login data:", loginData);
+
+      // Replace with your actual login API request
+      const response = await axiosInstance.post("/admin/login", loginData);
+
       const data = response.data;
-  
+
+      // Set the token with an expiry time (1 hour from now)
+      const expiryTime = new Date().getTime() + 60 * 60 * 1000; // 1 hour in milliseconds
       localStorage.setItem("adminToken", data.token);
+      localStorage.setItem("tokenExpiry", expiryTime); // Store expiry time
+
       setIsAuthenticated(true);
       fetchProjects(data.token);
+
+      // Optionally, set up an automatic logout function based on expiration
+      setTimeout(() => {
+        localStorage.removeItem("adminToken");
+        localStorage.removeItem("tokenExpiry");
+        setIsAuthenticated(false);
+      }, 60 * 60 * 1000); // 1 hour timeout
     } catch (err) {
       setError(err.response?.data?.message || err.message);
     } finally {
       setLoading(false);
     }
   };
-  
 
   const handleLogout = () => {
     localStorage.removeItem("adminToken");
@@ -102,24 +110,16 @@ function Admin() {
 
   const handleProjectSubmit = async (e) => {
     e.preventDefault();
+    console.log("Project form data:", projectForm);
+    
+    
     const token = localStorage.getItem("adminToken");
     try {
       setLoading(true);
-      const url = editingId ? `/api/projects/${editingId}` : "/api/projects";
-      const method = editingId ? "PATCH" : "POST";
-      const response = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          ...projectForm,
-          technologies: projectForm.technologies
-            .split(",")
-            .map((t) => t.trim()),
-        }),
-      });
+
+      const response = await axiosInstance.post("project/create-project", projectForm);
+      console.log("Response:", response);
+      
       if (!response.ok) throw new Error("Failed to save project");
       fetchProjects(token);
       setProjectForm({
@@ -128,7 +128,7 @@ function Admin() {
         technologies: "",
         imageUrl: "",
         liveUrl: "",
-        githubUrl: "",
+        gitHubUrl: "",
         featured: false,
       });
       setEditingId(null);
@@ -165,7 +165,7 @@ function Admin() {
       technologies: project.technologies.join(", "),
       imageUrl: project.imageUrl,
       liveUrl: project.liveUrl || "",
-      githubUrl: project.githubUrl || "",
+      gitHubUrl: project.gitHubUrl || "",
       featured: project.featured,
     });
     setEditingId(project._id);
@@ -316,11 +316,11 @@ function Admin() {
                   type="url"
                   placeholder="GitHub URL"
                   className="bg-gray-800 text-white placeholder-gray-400 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
-                  value={projectForm.githubUrl}
+                  value={projectForm.gitHubUrl}
                   onChange={(e) =>
                     setProjectForm({
                       ...projectForm,
-                      githubUrl: e.target.value,
+                      gitHubUrl: e.target.value,
                     })
                   }
                 />
@@ -376,7 +376,7 @@ function Admin() {
                         technologies: "",
                         imageUrl: "",
                         liveUrl: "",
-                        githubUrl: "",
+                        gitHubUrl: "",
                         featured: false,
                       });
                     }}
@@ -419,9 +419,9 @@ function Admin() {
                     Tech: {project.technologies.join(", ")}
                   </p>
                   <div className="flex justify-between text-sm text-blue-400 mt-2">
-                    {project.githubUrl && (
+                    {project.gitHubUrl && (
                       <a
-                        href={project.githubUrl}
+                        href={project.gitHubUrl}
                         target="_blank"
                         rel="noreferrer"
                         className="hover:underline"

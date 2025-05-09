@@ -1,8 +1,15 @@
 import axios from "axios";
 
+const token = localStorage.getItem("token");
+
 const axiosInstance = axios.create({
-    baseURL: "https://portfolio-server-1-a04i.onrender.com/api/",
+    baseURL: process.env.REACT_APP_API_URL,
     withCredentials: true,
+    headers:{
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization" : `${token}`
+    }
   });
   
 
