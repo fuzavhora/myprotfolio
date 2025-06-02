@@ -1,57 +1,56 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { FaGithub, FaLinkedin, FaInstagram, FaEnvelope } from 'react-icons/fa';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { FaGithub, FaLinkedin, FaInstagram, FaEnvelope } from "react-icons/fa";
 
 function Contact() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
+    name: "",
+    email: "",
     subject: "",
-    message: ''
+    message: "",
   });
   const [status, setStatus] = useState({
-    type: '',
-    message: ''
+    type: "",
+    message: "",
   });
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setStatus({ type: '', message: '' });
+    setStatus({ type: "", message: "" });
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
+      const response = await fetch("/contact", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData)
+        formData,
       });
 
       const data = await response.json();
 
       if (response.ok) {
         setStatus({
-          type: 'success',
-          message: 'Message sent successfully!'
+          type: "success",
+          message: "Message sent successfully!",
         });
-        setFormData({ name: '', email: '',subject:"", 
-          message: '' });
+        setFormData({ name: "", email: "", subject: "", message: "" });
       } else {
-        throw new Error(data.message || 'Something went wrong');
+        throw new Error(data.message || "Something went wrong");
       }
     } catch (err) {
       setStatus({
-        type: 'error',
-        message: err.message
+        type: "error",
+        message: err.message,
       });
     } finally {
       setLoading(false);
@@ -60,28 +59,27 @@ function Contact() {
 
   const socialLinks = [
     {
-      name: 'GitHub',
-      url: 'https://github.com/fuzavhora',
-      icon: FaGithub
+      name: "GitHub",
+      url: "https://github.com/fuzavhora",
+      icon: FaGithub,
     },
     {
-      name: 'LinkedIn',
-      url: 'https://www.linkedin.com/in/fuzail-vhora-8188601a6/',
-      icon: FaLinkedin
-    },
-  
-    {
-      name: 'Instagram',
-      url: 'https://www.instagram.com/f.m.vhora',
-      icon: FaInstagram
-
+      name: "LinkedIn",
+      url: "https://www.linkedin.com/in/fuzail-vhora-8188601a6/",
+      icon: FaLinkedin,
     },
 
     {
-      name: 'Email',
-      url: 'mailto:your.email@example.com',
-      icon: FaEnvelope
-    }
+      name: "Instagram",
+      url: "https://www.instagram.com/f.m.vhora",
+      icon: FaInstagram,
+    },
+
+    {
+      name: "Email",
+      url: "mailto:your.email@example.com",
+      icon: FaEnvelope,
+    },
   ];
 
   return (
@@ -104,7 +102,10 @@ function Contact() {
             >
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium mb-2">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium mb-2"
+                  >
                     Name
                   </label>
                   <motion.input
@@ -123,7 +124,10 @@ function Contact() {
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium mb-2">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium mb-2"
+                  >
                     Email
                   </label>
                   <motion.input
@@ -161,7 +165,10 @@ function Contact() {
                 </div> */}
 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium mb-2">
+                  <label
+                    htmlFor="message"
+                    className="block text-sm font-medium mb-2"
+                  >
                     Message
                   </label>
                   <motion.textarea
@@ -182,9 +189,9 @@ function Contact() {
                 {status.message && (
                   <motion.div
                     className={`p-4 rounded-md ${
-                      status.type === 'success'
-                        ? 'bg-green-50 text-green-800'
-                        : 'bg-red-50 text-red-800'
+                      status.type === "success"
+                        ? "bg-green-50 text-green-800"
+                        : "bg-red-50 text-red-800"
                     }`}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -198,12 +205,12 @@ function Contact() {
                   type="submit"
                   disabled={loading}
                   className={`w-full p-3 rounded-lg bg-primary text-white hover:bg-primary-dark focus:outline-none ${
-                    loading ? 'opacity-75 cursor-not-allowed' : ''
+                    loading ? "opacity-75 cursor-not-allowed" : ""
                   }`}
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.2 }}
                 >
-                  {loading ? 'Sending...' : 'Send Message'}
+                  {loading ? "Sending..." : "Send Message"}
                 </motion.button>
               </form>
             </motion.div>
